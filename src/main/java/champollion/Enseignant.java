@@ -1,11 +1,16 @@
 package champollion;
+import java.lang.ProcessBuilder.Redirect.Type;
+import java.util.*;
 
 public class Enseignant extends Personne {
 
-    // TODO : rajouter les autres méthodes présentes dans le diagramme UML
+    private ArrayList<UE> enseignements;
+    private ArrayList<Intervention> interventionsPlanifiés;
 
     public Enseignant(String nom, String email) {
         super(nom, email);
+        this.enseignements = new ArrayList<UE>();
+        this.interventionsPlanifiés = new ArrayList<Intervention>();
     }
 
     /**
@@ -17,8 +22,11 @@ public class Enseignant extends Personne {
      *
      */
     public int heuresPrevues() {
-        // TODO: Implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        long hPrev = 0;
+        for(int i = 0; i < this.enseignements.size(); i++){
+            hPrev += this.enseignements.get(i).getService(this).getHeureEquivalentTD();
+        }
+        return (int)hPrev;
     }
 
     /**
@@ -31,8 +39,9 @@ public class Enseignant extends Personne {
      *
      */
     public int heuresPrevuesPourUE(UE ue) {
-        // TODO: Implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        ServicePrevu tmp = ue.getService(this);
+        long hTD = tmp.getHeureEquivalentTD();
+        return (int)hTD;
     }
 
     /**
@@ -42,10 +51,50 @@ public class Enseignant extends Personne {
      * @param volumeCM le volume d'heures de cours magitral
      * @param volumeTD le volume d'heures de TD
      * @param volumeTP le volume d'heures de TP
+     * @throws Exception
      */
-    public void ajouteEnseignement(UE ue, int volumeCM, int volumeTD, int volumeTP) {
-        // TODO: Implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+    public void ajouteEnseignement(UE ue, int volumeCM, int volumeTD, int volumeTP) throws Exception {
+        ServicePrevu tmp = new ServicePrevu(volumeCM, volumeTD, volumeTP);
+        // System.out.println(ue.getHeureCM() + " " + ue.getHeureTD() + " " + ue.getHeureTP());
+        // System.out.println(tmp.getVolumeCM() + " " + tmp.getVolumeTD() + " " + tmp.getVolumeTP());
+        // System.out.println(ue.checkVolumeHoraire(tmp));
+        if(!(ue.checkVolumeHoraire(tmp))){
+            throw new Exception("Volume Horaire demandé par l'enseignant trop important");
+        }
+        if(!(this.enseignements.contains(ue))){
+            this.enseignements.add(ue);
+            ue.addIntervenant(this, tmp);
+        }
+        else{
+            ue.addService(this, tmp);
+        }
+    }
+
+    public void ajouteIntervention(Intervention i){
+        this.interventionsPlanifiés.add(i);
+        UE tmp = i.getMatiere();
+        System.out.println(i.getMatiere());
+        tmp.addSeance(i);
+    }
+
+    public int getNbIntervention(){
+        return this.interventionsPlanifiés.size();
+    }
+
+    public boolean enSousService(){
+        return this.heuresPrevues() < 192;
+    }
+
+    public int resteAPlanifier(UE ue, TypeIntervention type){
+        ServicePrevu sp = ue.getService(this);
+        int nbHeurePlanif = 0;
+        for(int i = 0; i < this.interventionsPlanifiés.size(); i++){
+            if(this.interventionsPlanifiés.get(i).getType() == type){
+                nbHeurePlanif += this.interventionsPlanifiés.get(i).getDuree();
+            }
+        }
+
+        return (sp.getVolumeCM() - nbHeurePlanif);
     }
 
 }

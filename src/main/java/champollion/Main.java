@@ -1,13 +1,13 @@
 package champollion;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Enseignant bastide = new Enseignant("Rémi Bastide", "Remi.Bastide@irit.fr");
         Enseignant lamine  = new Enseignant("Elyes Lamine", "Elyes.Lamine@univ-jfc.fr");
         
-        UE uml = new UE("Conception par objets avec UML");
-        UE bd  = new UE("Bases de données");
-        UE web = new UE("Technologies web");
+        UE uml = new UE("Conception par objets avec UML", 32, 21, 15);
+        UE bd  = new UE("Bases de données", 9, 3, 6);
+        UE web = new UE("Technologies web", 34, 12, 87);
         
         bastide.ajouteEnseignement(uml, 12, 20, 20);
         bastide.ajouteEnseignement(web,  8, 20, 30);
