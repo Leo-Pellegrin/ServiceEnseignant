@@ -9,17 +9,23 @@ public class ChampollionJUnitTest {
 	Enseignant untel;
 	UE uml, java, genielog;
 	Intervention cours, cours2, cours3, cours4;
+	Salle s, s1;
 		
 	@BeforeEach
 	public void setUp() {
 		untel = new Enseignant("untel", "untel@gmail.com");
 		uml = new UE("UML", 60, 40, 20);
-		java = new UE("Programmation en java", 10, 5, 4);		
-		cours = new Intervention(new Date(), 2, 10, java, TypeIntervention.TD);
+		java = new UE("Programmation en java", 10, 5, 4);
+
+		s = new Salle("105", 20);
+		s1 = new Salle("101", 20);
+		
+		cours = new Intervention(new Date(), 2, 10, java, TypeIntervention.TD, s);
+
 		genielog = new UE("Genie log", 80, 60, 50);
-		cours2 = new Intervention(new Date(), 2, 10, genielog, TypeIntervention.CM);
-		cours3 = new Intervention(new Date(), 2, 10, genielog, TypeIntervention.TP);
-		cours4 = new Intervention(new Date(), 2, 10, genielog, TypeIntervention.TD);
+		cours2 = new Intervention(new Date(), 2, 10, genielog, TypeIntervention.CM, s);
+		cours3 = new Intervention(new Date(), 2, 10, genielog, TypeIntervention.TP, s1);
+		cours4 = new Intervention(new Date(), 2, 10, genielog, TypeIntervention.TD, s1);
 
 	}
 	

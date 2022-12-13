@@ -75,6 +75,7 @@ public class Enseignant extends Personne {
         UE tmp = i.getMatiere();
         System.out.println(i.getMatiere());
         tmp.addSeance(i);
+        i.getLieu().addOccupation(i);
     }
 
     public int getNbIntervention(){
